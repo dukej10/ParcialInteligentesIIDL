@@ -37,11 +37,11 @@ numeroCanales=1  # Para trabajar con escala de grises debe ser 1
 formaImagen=(ancho,alto,numeroCanales)
 numeroCategorias=7  # son 10 por se clasificaran en 10 categorias según el numero
 
-cantidaDatosEntrenamiento=[22,22,18,18,22,22,22] # Cuantas imagenes hay para el entrenamiento por cada clase
-cantidaDatosPruebas=[22,22,18,18,22,22,22] # Cuantas imagenes hay para la prueba por cada clase
+cantidaDatosEntrenamiento=[209,209,209,209,209,209,209] # Cuantas imagenes hay para el entrenamiento por cada clase
+cantidaDatosPruebas=[209,209,209,209,209,209,209] # Cuantas imagenes hay para la prueba por cada clase
 
 #Cargar las imágenes
-imagenes, probabilidades=cargarDatos("dataset/train/",numeroCategorias,cantidaDatosEntrenamiento,ancho,alto)
+imagenes, probabilidades=cargarDatos("dataset/train/grays/",numeroCategorias,cantidaDatosEntrenamiento,ancho,alto)
 
 model=Sequential()
 #Capa entrada
@@ -62,7 +62,7 @@ model.add(Flatten())
 model.add(Dense(128,activation="relu"))
 
 #Capa de salida
-model.add(Dense(numeroCategorias,activation="softmax"))
+model.add(Dense(numeroCategorias,activation="sigmoid"))
 
 
 #Traducir de keras a tensorflow
@@ -71,7 +71,7 @@ model.compile(optimizer="adam",loss="categorical_crossentropy", metrics=["accura
 model.fit(x=imagenes,y=probabilidades,epochs=30,batch_size=60)
 
 #Prueba del modelo
-imagenesPrueba,probabilidadesPrueba=cargarDatos("dataset/test/",numeroCategorias,cantidaDatosPruebas,ancho,alto)
+imagenesPrueba,probabilidadesPrueba=cargarDatos("dataset/test/grays/",numeroCategorias,cantidaDatosPruebas,ancho,alto)
 resultados=model.evaluate(x=imagenesPrueba,y=probabilidadesPrueba)
 print("Accuracy=",resultados[1])
 

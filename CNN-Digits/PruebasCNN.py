@@ -6,20 +6,23 @@ from sklearn.metrics import confusion_matrix
 
 from entrenamiento import numeroCategorias, cantidaDatosPruebas, cargarDatos
 
-clases=["6 Bastos","7 de Bastos","8 de Bastos","9 de Bastos","Sota de Bastos","Caballo de Bastos","Rey de Bastos"]
+class PruebasCNN:
+    def __init__(self):
 
-ancho=128
-alto=128
+        self.clases=["6 Bastos","7 de Bastos","8 de Bastos","9 de Bastos","Sota de Bastos","Caballo de Bastos","Rey de Bastos"]
 
-miModeloCNN=Prediccion("models/modeloA.h5",ancho,alto)
-imagen=cv2.imread("dataset/test/7/7_17.jpg")
-
-
-
-claseResultado=miModeloCNN.predecir(imagen)
-print("La imagen cargada es ",clases[claseResultado])
+        self.ancho=128
+        self.alto=128
+        self.miModeloCNN=Prediccion("models/modeloA.h5",self.ancho,self.alto)
 
 
+
+    def process(self):
+        imagen = cv2.imread("contorno_0.jpg")
+        claseResultado=self.miModeloCNN.predecir(imagen)
+        print("La imagen cargada es ",self.clases[claseResultado])
+        return self.clases[claseResultado]
+"""
 # ----- METRICAS -----------
 # Carga de imágenes de prueba y etiquetas correspondientes
 imagenesPrueba, etiquetasPrueba = cargarDatos("dataset/test/", numeroCategorias, cantidaDatosPruebas, ancho, alto)
@@ -39,10 +42,4 @@ print(matrizConfusion)
 
 # -------------------------------------------------------------------
 
-
-while True:
-    cv2.imshow("imagen",imagen)
-    k=cv2.waitKey(30) & 0xff
-    if k==27:
-        break
-cv2.destroyAllWindows()
+"""
