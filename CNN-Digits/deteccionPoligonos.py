@@ -7,7 +7,7 @@ pruebasCNN = PruebasCNN()
 nameWindow = "Calculadora"
 prediccion = False
 string = ""
-mensaje = ""
+mensaje = {"clase": ""}
 
 # Variable to keep track of whether two squares have been detected
 num_squares = 0
@@ -26,6 +26,8 @@ processed_centers = []
 
 # List to store the detected square vertices
 squares_vertices = []
+
+total = 0
 
 def nothing(x):
     pass
@@ -57,11 +59,11 @@ def detectarFigura(imagenOriginal):
     min_cv = cv2.getTrackbarPos("min", nameWindow)
     max_cv = cv2.getTrackbarPos("max", nameWindow)
     bordes = cv2.Canny(imagenGris, min_cv, max_cv)
-    cv2.imshow("Bordes", bordes)
+    #cv2.imshow("Bordes", bordes)
     tamañoKernel = cv2.getTrackbarPos("kernel", nameWindow)
     kernel = np.ones((tamañoKernel, tamañoKernel), np.uint8)
     bordes = cv2.dilate(bordes, kernel)
-    cv2.imshow("Bordes Modificado", bordes)
+    #cv2.imshow("Bordes Modificado", bordes)
     figuras, jerarquia = cv2.findContours(bordes, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     areas = calcularAreas(figuras)
     i = 0
@@ -71,10 +73,11 @@ def detectarFigura(imagenOriginal):
         if areas[i] >= areaMin:
             vertices = cv2.approxPolyDP(figuraActual, 0.05 * cv2.arcLength(figuraActual, True), True)
             if len(vertices) == 4:  # Verificar si la figura es un cuadrado y convexa:
-                cv2.putText(imagenOriginal, mensaje, (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+                cv2.putText(imagenOriginal, mensaje["clase"], (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+                cv2.putText(imagenOriginal, f'Total {total}', (300, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+
                 cv2.drawContours(imagenOriginal, [figuraActual], 0, (0, 0, 255), 2)
                 if start_counting:
-                        print("NO")
                         num_squares += 1
                         squares_vertices.append(vertices)
                         squares_vertices.append(vertices.tolist())
@@ -147,7 +150,7 @@ def pruebas():
         cv2.imwrite(f"contorno_{0}.jpg", cropped)
 
 
-video = cv2.VideoCapture(0)
+video = cv2.VideoCapture(1)
 constructorVentana()
 
 while True:
@@ -158,27 +161,24 @@ while True:
     elif k == ord('c'):  # Press 'c' to capture a photo
         capture_photo = True
         start_counting = True
-    elif k == ord('r'):  # Press 'r' to restart counting
-        capture_photo = False
-        prediccion = False
-        cv2.destroyWindow("Captured Photo")
-    if capture_photo and start_counting is False:
-        cv2.imshow("Captured Photo", frame)
+    elif k == ord('e'):
         if prediccion is False:
             pruebas()
             mensaje = pruebasCNN.process()
+            total+= mensaje["valor"]
             prediccion = True
             print(f'se detectó {mensaje}')
+            capture_photo = False
 
+    elif k == ord('r'):  # Press 'r' to restart counting
+        capture_photo = False
+        prediccion = False
+    if capture_photo and start_counting is False:
+        if prediccion is False:
+            pruebas()
     else:
         frame = detectarFigura(frame)
         cv2.imshow("Imagen", frame)
-
-
-
-
-
-
 
 video.release()
 cv2.destroyAllWindows()
