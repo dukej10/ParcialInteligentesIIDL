@@ -8,6 +8,7 @@ nameWindow = "Calculadora"
 prediccion = False
 string = ""
 mensaje = {"clase": ""}
+procesar_text = ""
 
 # Variable to keep track of whether two squares have been detected
 num_squares = 0
@@ -31,12 +32,6 @@ total = 0
 
 def nothing(x):
     pass
-
-def is_similar(vertices1, vertices2):
-    # Calculate the distance between vertices1 and vertices2 using Euclidean distance
-    dist = distance.euclidean(vertices1.flatten(), vertices2.flatten())
-    similarity_threshold = 100  # Adjust this threshold based on your requirements
-    return dist < similarity_threshold
 
 def constructorVentana():
     cv2.namedWindow(nameWindow)
@@ -73,9 +68,10 @@ def detectarFigura(imagenOriginal):
         if areas[i] >= areaMin:
             vertices = cv2.approxPolyDP(figuraActual, 0.05 * cv2.arcLength(figuraActual, True), True)
             if len(vertices) == 4:  # Verificar si la figura es un cuadrado y convexa:
-                cv2.putText(imagenOriginal, mensaje["clase"], (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
-                cv2.putText(imagenOriginal, f'Total {total}', (300, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
-
+                cv2.putText(imagenOriginal, mensaje["clase"], (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+                cv2.putText(imagenOriginal, f'Total {total}', (300, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+                cv2.putText(imagenOriginal, procesar_text, (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2,
+                            cv2.LINE_AA)
                 cv2.drawContours(imagenOriginal, [figuraActual], 0, (0, 0, 255), 2)
                 if start_counting:
                         num_squares += 1
@@ -156,12 +152,14 @@ constructorVentana()
 while True:
     _, frame = video.read()
     k = cv2.waitKey(5)
-    if k == ord('q'):  # Press 'q' to exit the program
+    if k == ord('q') or k == ord('Q') :  # Press 'q' to exit the program
         break
-    elif k == ord('c'):  # Press 'c' to capture a photo
+    elif k == ord('c') or k == ord('C'):
+        procesar_text = 'Pulse E para procesar la foto'# Press 'c' to capture a photo
         capture_photo = True
-        start_counting = True
-    elif k == ord('e'):
+        start_counting = False
+
+    elif k == ord('e') or k == ord('E'):
         if prediccion is False:
             pruebas()
             mensaje = pruebasCNN.process()
@@ -170,14 +168,18 @@ while True:
             print(f'se detectó {mensaje}')
             capture_photo = False
 
-    elif k == ord('r'):  # Press 'r' to restart counting
+    elif k == ord('r') or k == ord('R'):  # Press 'r' to restart counting
         capture_photo = False
         prediccion = False
+        procesar_text = "Pulse C para tomar la foto"
     if capture_photo and start_counting is False:
         if prediccion is False:
             pruebas()
     else:
         frame = detectarFigura(frame)
+        # Agregar texto a la imagen
+
+        procesar_text = 'Pulse C para tomar la foto'
         cv2.imshow("Imagen", frame)
 
 video.release()
