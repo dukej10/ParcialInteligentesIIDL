@@ -124,8 +124,6 @@ def detectarFigura(imagenOriginal):
                             else:
 
                                 # Guardar las imágenes de los cuadrados en archivos separados
-                                cv2.imwrite("primero.jpg", primer_cuadrado)
-                                cv2.imwrite("segundo.jpg", segundo_cuadrado)
                                 cv2.imwrite("imgs/dos/primer_cuadrado.jpg", primer_cuadrado)
                                 cv2.imwrite("imgs/dos/segundo_cuadrado.jpg", segundo_cuadrado)
                                 start_counting = False
