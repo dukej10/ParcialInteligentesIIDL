@@ -4,7 +4,6 @@ from Prediccion import Prediccion
 import numpy as np
 from sklearn.metrics import confusion_matrix
 
-from entrenamiento import numeroCategorias, cantidaDatosPruebas, cargarDatos
 
 class PruebasCNN:
     def __init__(self):
@@ -22,11 +21,31 @@ class PruebasCNN:
 
 
 
-    def process(self):
-        imagen = cv2.imread("contorno_0.jpg")
-        claseResultado=self.miModeloCNN.predecir(imagen)
-        print("La imagen cargada es ",self.valores[self.clases[claseResultado]])
-        return self.valores[self.clases[claseResultado]]
+    def process(self, numeroPredicciones):
+        imagen1 = None
+        imagen2 = None
+        datos = []
+        if numeroPredicciones == 2:
+            imagen1 = cv2.imread("imgs/dos/primer_cuadrado.jpg")
+            imagen2 = cv2.imread("imgs/dos/segundo_cuadrado.jpg")
+            if imagen2 is not None and imagen1 is not None:
+                claseResultado = self.miModeloCNN.predecir(imagen1)
+                datos.append(self.valores[self.clases[claseResultado]])
+                claseResultado = self.miModeloCNN.predecir(imagen2)
+                datos.append(self.valores[self.clases[claseResultado]])
+                print(datos[0])
+                print(datos[1])
+               
+            else:
+                datos.append({"mensaje": ""})
+                
+
+        else:
+            imagen = cv2.imread("imgs/una/primer_cuadrado.jpg")
+            claseResultado=self.miModeloCNN.predecir(imagen)
+            datos.append(self.valores[self.clases[claseResultado]])
+            print("La imagen cargada es", datos)
+        return datos
 """
 # ----- METRICAS -----------
 # Carga de imágenes de prueba y etiquetas correspondientes
