@@ -76,7 +76,7 @@ resultados=model.evaluate(x=imagenesPrueba,y=probabilidadesPrueba)
 print("Accuracy=",resultados[1])
 
 # Guardar modelo
-ruta="models/modeloA.h5"
+ruta="models/modeloA_red1.h5"
 model.save(ruta)
 # Informe de estructura de la red
 model.summary()
