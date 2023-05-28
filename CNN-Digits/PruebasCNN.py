@@ -17,17 +17,28 @@ class PruebasCNN:
         }
         self.ancho=128
         self.alto=128
-        self.miModeloCNN=Prediccion("models/modeloA.h5",self.ancho,self.alto)
+        self.miModeloCNN= None
 
 
+    def red1(self):
+        self.miModeloCNN = Prediccion("models/modeloA_red1.h5", self.ancho, self.alto)
+        imagen = cv2.imread("imgs/dos/primer_carta.jpg")
+        claseResultado = self.miModeloCNN.predecir(imagen)
+        print(self.valores[self.clases[claseResultado]])
+
+    def red2(self):
+        self.miModeloCNN = Prediccion("models/modeloA_red2.h5", self.ancho, self.alto)
+        imagen = cv2.imread("imgs/dos/primer_carta.jpg")
+        claseResultado = self.miModeloCNN.predecir(imagen)
+        print(self.valores[self.clases[claseResultado]])
 
     def process(self, numeroPredicciones):
         imagen1 = None
         imagen2 = None
         datos = []
         if numeroPredicciones == 2:
-            imagen1 = cv2.imread("imgs/dos/primer_cuadrado.jpg")
-            imagen2 = cv2.imread("imgs/dos/segundo_cuadrado.jpg")
+            imagen1 = cv2.imread("imgs/dos/primer_carta.jpg")
+            imagen2 = cv2.imread("imgs/dos/segundo_carta.jpg")
             if imagen2 is not None and imagen1 is not None:
                 claseResultado = self.miModeloCNN.predecir(imagen1)
                 datos.append(self.valores[self.clases[claseResultado]])
@@ -41,7 +52,7 @@ class PruebasCNN:
                 
 
         else:
-            imagen = cv2.imread("imgs/una/primer_cuadrado.jpg")
+            imagen = cv2.imread("imgs/una/carta.jpg")
             claseResultado=self.miModeloCNN.predecir(imagen)
             datos.append(self.valores[self.clases[claseResultado]])
             print("La imagen cargada es", datos)
@@ -67,3 +78,8 @@ print(matrizConfusion)
 # -------------------------------------------------------------------
 
 """
+
+def main():
+    pruebas = PruebasCNN()
+
+
