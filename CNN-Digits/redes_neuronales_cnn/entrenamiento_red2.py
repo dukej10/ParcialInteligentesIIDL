@@ -1,3 +1,13 @@
+#ModelR2
+#En primer lugar, se cargan las imágenes de entrenamiento y prueba, las cuales son procesadas para convertirlas 
+#a escala de grises, redimensionarlas y normalizar sus valores. A continuación, se define la estructura del modelo de la CNN, 
+#que consiste en 3 capas de convolución con activacion relu, aplanamiento con activacion relu y capa de salida con activacion sigmoid. 
+#El modelo se compila especificando el optimizador, la función de pérdida y las métricas a utilizar, y luego se entrena 
+#utilizando las imágenes de entrenamiento. Una vez entrenado, se evalúa el modelo utilizando las imágenes de prueba y 
+#se calculan diversas métricas de evaluación, como precisión, recall y puntuación F1. Además, se genera una matriz de 
+#confusión y se guarda el modelo entrenado en un archivo para su uso posterior.
+
+
 from matplotlib import pyplot as plt
 import tensorflow as tf
 import keras
