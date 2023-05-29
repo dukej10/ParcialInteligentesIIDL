@@ -1,17 +1,18 @@
+from matplotlib import pyplot as plt
 import tensorflow as tf
 import keras
 import numpy as np
+import seaborn as sns
 import cv2
+from keras.callbacks import EarlyStopping
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
+import time
+
 ###Importar componentes de la red neuronal
 from keras.models import Sequential
 from keras.layers import InputLayer,Input,Conv2D, MaxPool2D,Reshape,Dense,Flatten
-from keras.callbacks import EarlyStopping
-from matplotlib import pyplot as plt
-from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
-from keras import regularizers
-
-
 ##################################
+
 def cargarDatos(rutaOrigen,numeroCategorias,limite,ancho,alto):
     imagenesCargadas=[]
     valorEsperado=[]
@@ -48,56 +49,67 @@ cantidaDatosPruebas=[209,209,209,209,209,209,209] # Cuantas imagenes hay para la
 #Cargar las imágenes
 imagenes, probabilidades=cargarDatos("../dataset/train/grays/",numeroCategorias,cantidaDatosEntrenamiento,ancho,alto)
 
-model=Sequential()
+modelR2=Sequential()
 #Capa entrada
-model.add(InputLayer(input_shape=(pixeles,)))
-model.add(Reshape(formaImagen))  #Rearmar la imagen para que queden con la forma correspondiente
+modelR2.add(InputLayer(input_shape=(pixeles,)))
+modelR2.add(Reshape(formaImagen))  #Rearmar la imagen para que queden con la forma correspondiente
 
 #Capas Ocultas
 #Capas convolucionales
 # Same dudplica los ultimos datos
-model.add(Conv2D(kernel_size=5,strides=2,filters=16,padding="same",activation="relu",name="capa_1", kernel_regularizer=regularizers.l2(0.01)))
-model.add(MaxPool2D(pool_size=2,strides=2)) #Reduccion de la imagen y quedarse con los datos mas caracteristicos
+modelR2.add(Conv2D(kernel_size=5, strides=2, filters=16, padding="same", activation="relu", name="capa_1"))
+modelR2.add(MaxPool2D(pool_size=2, strides=2)) #Reduccion de la imagen y quedarse con los datos mas caracteristicos
 
-model.add(Conv2D(kernel_size=3,strides=1,filters=36,padding="same",activation="relu",name="capa_2"))
-model.add(MaxPool2D(pool_size=2,strides=2))
+modelR2.add(Conv2D(kernel_size=3, strides=1, filters=36, padding="same", activation="relu", name="capa_2"))
+modelR2.add(MaxPool2D(pool_size=2, strides=2))
 
+# Nueva capa convolucional
+modelR2.add(Conv2D(kernel_size=3, strides=1, filters=64, padding="same", activation="relu", name="capa_3"))
+modelR2.add(MaxPool2D(pool_size=2, strides=2))
 #Aplanamiento
-model.add(Flatten())
-model.add(Dense(128,activation="relu", kernel_regularizer=regularizers.l2(0.01)))
+modelR2.add(Flatten())
+modelR2.add(Dense(128, activation="relu"))
 
 #Capa de salida
-model.add(Dense(numeroCategorias,activation="sigmoid"))
+modelR2.add(Dense(numeroCategorias, activation="sigmoid"))
 
 
 #Traducir de keras a tensorflow
-model.compile(optimizer="adam",loss="categorical_crossentropy", metrics=["accuracy"])
-
-# Verificación de sobreajuste
-# Detiene el entrenamiento del modelo antes de ocurra el entrenamiento
-# Si no detecta una mejoría en la métrica
-early_stopping = EarlyStopping(monitor="val_loss", patience=3, restore_best_weights=True)
-
-
+modelR2.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
 #Entrenamiento
-history = model.fit(x=imagenes, y=probabilidades, epochs=30, batch_size=60, validation_split=0.3, callbacks=[early_stopping])
+# Verificación de sobreajuste
+early_stopping = EarlyStopping(monitor="val_loss", patience=5, restore_best_weights=True)
 
-
+# Entrenamiento con conjunto de validación
+history = modelR2.fit(x=imagenes, y=probabilidades, epochs=30, batch_size=60, callbacks=[early_stopping])
 
 #Prueba del modelo
-
-
+start_time = time.time()  # Obtener el tiempo de inicio
 imagenesPrueba,probabilidadesPrueba=cargarDatos("../dataset/test/grays/",numeroCategorias,cantidaDatosPruebas,ancho,alto)
-resultados=model.evaluate(x=imagenesPrueba,y=probabilidadesPrueba)
+resultados=modelR2.evaluate(x=imagenesPrueba, y=probabilidadesPrueba)
+end_time = time.time()  # Obtener el tiempo de finalización
+elapsed_time = end_time - start_time  # Calcular el tiempo transcurrido
+print("Tiempo de ejecución:", elapsed_time)
 print("Accuracy=",resultados[1])
 
+# Evaluación de overfitting
+print("<===============>")
+print("Verificación Overfitting")
+resultadosEntrenamiento = modelR2.evaluate(x=imagenes, y=probabilidades)
+print("Training Loss:", resultadosEntrenamiento[0])
+print("Training Accuracy:", resultadosEntrenamiento[1])
+print("Validation Loss:", resultados[0])
+print("Validation Accuracy:", resultados[1])
+
+#Métricas
+print("============================")
+print("     Métricas")
+
 # Obtener las etiquetas predichas
-y_pred = model.predict(x=imagenesPrueba)
+y_pred = modelR2.predict(x=imagenesPrueba)
 y_pred_classes = np.argmax(y_pred, axis=1)
 y_true = np.argmax(probabilidadesPrueba, axis=1)
 
-print("============================")
-print("     Métricas")
 # Matriz de confusión
 confusion = confusion_matrix(y_true, y_pred_classes)
 print("Matriz de confusión:")
@@ -122,37 +134,28 @@ print("F1 Score:", f1)
 # Pérdida
 loss = resultados[0]
 print("Loss:", loss)
-
-
 # Guardar modelo
-ruta="models/modeloA_red1.h5"
-model.save(ruta)
+ruta="../models/modeloA_red2.h5"
+modelR2.save(ruta)
 # Informe de estructura de la red
-model.summary()
+modelR2.summary()
 
+# Matriz de confusión gráfica
 
-# Gráficas de aprendizaje
-print(history)
-print(history.history)
-train_loss = history.history['loss']
-val_loss = history.history['val_loss']
-train_acc = history.history['accuracy']
-val_acc = history.history['val_accuracy']
+labels = ["6", "7", "8", "9", "10", "11", "12"]
 
-plt.figure(figsize=(8, 6))
-plt.plot(range(1, len(train_loss) + 1), train_loss, label='Training Loss')
-plt.plot(range(1, len(val_loss) + 1), val_loss, label='Validation Loss')
-plt.title('Loss Curves')
-plt.xlabel('Epoch')
-plt.ylabel('Loss')
-plt.legend()
-plt.show()
+# Crear una figura de matplotlib
+fig, ax = plt.subplots(figsize=(8, 6))
 
-plt.figure(figsize=(8, 6))
-plt.plot(range(1, len(train_acc) + 1), train_acc, label='Training Accuracy')
-plt.plot(range(1, len(val_acc) + 1), val_acc, label='Validation Accuracy')
-plt.title('Accuracy Curves')
-plt.xlabel('Epoch')
-plt.ylabel('Accuracy')
-plt.legend()
+# Utilizar seaborn para crear un mapa de calor de la matriz de confusión
+sns.heatmap(confusion, annot=True, cmap="Blues", fmt="d", cbar=False)
+# Configurar etiquetas de los ejes
+ax.set_xlabel("Predicciones")
+ax.set_ylabel("Valores verdaderos")
+ax.set_title("Matriz de Confusión")
+# Configurar etiquetas personalizadas en los ejes x e y
+ax.set_xticklabels(labels)
+ax.set_yticklabels(labels)
+
+# Mostrar la figura
 plt.show()
