@@ -3,8 +3,9 @@ import shutil
 
 import cv2
 
+# Métodos para editar el dataset
 
-def grises():
+def convertir_grises_imagenes():
     # Obtener la ruta del archivo de script
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -19,48 +20,43 @@ def grises():
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             gray = cv2.resize(gray, (128, 128))
 
+            # Guardar en test
             output_folder = os.path.join(script_dir, "dataset", "test","grays", str(n))
             os.makedirs(output_folder, exist_ok=True)  # Crear la carpeta si no existe
             output_path = os.path.join(script_dir, "dataset", "test","grays", str(n), str(n)+'_' + str(i) + '.jpg')
-            # print(output_path)
             cv2.imwrite(output_path, gray)
+            #Guardar en train
             output_folder = os.path.join(script_dir, "dataset", "train", "grays", str(n))
             os.makedirs(output_folder, exist_ok=True)  # Crear la carpeta si no existe
             output_path = os.path.join(script_dir, "dataset", "train", "grays", str(n), str(n) + '_' + str(i) + '.jpg')
-            # print(output_path)
             cv2.imwrite(output_path, gray)
 
 def resize():
     # Obtener la ruta del archivo de script
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
-    # Construir la ruta completa de la imagen
-    n = 11
     for n in range(6,13):
         for i in range(0,42):
-            image_path = os.path.join(script_dir, "dataset", "test", str(n), str(n)+'_' + str(i) + '.jpg')
-            print(image_path)
-            # Cargar la imagen
+            image_path = os.path.join(script_dir, "dataset", "test", str(n), str(n)+'_' + str(i) + '.jpg')            # Cargar la imagen
             img = cv2.imread(image_path)
 
             # Escalar imagenes
             img = cv2.resize(img, (128, 128))
+            #Guardar imagenes en test
             output_folder = os.path.join(script_dir, "dataset", "test", "grays", str(n))
             os.makedirs(output_folder, exist_ok=True)  # Crear la carpeta si no existe
             output_path = os.path.join(script_dir, "dataset", "test", "grays",str(n), str(n)+'_' + str(i) + '.jpg')
-            # print(output_path)
             cv2.imwrite(output_path, img)
+            # Guardar imagenes en train
             output_folder = os.path.join(script_dir, "dataset", "train", "grays", str(n))
             os.makedirs(output_folder, exist_ok=True)  # Crear la carpeta si no existe
             output_path = os.path.join(script_dir, "dataset", "train", "grays", str(n), str(n) + '_' + str(i) + '.jpg')
-            # print(output_path)
             cv2.imwrite(output_path, img)
 
-def resize_and_rotate():
+def rotar_imagenes():
     # Obtener la ruta del archivo de script
     script_dir = os.path.dirname(os.path.abspath(__file__))
     num = 0
-    # Construir la ruta completa de la imagen
     for n in range(6, 13):
         nimg = 0
         num = 0
@@ -71,17 +67,21 @@ def resize_and_rotate():
             print(image_path)
             # Cargar la imagen
             img = cv2.imread(image_path)
-            # Rotar imagen 90 grados
+            # Rotar imagen cada 72 grados
             for rotation in range(72, 360, 72):
-
+                # Obtener dimensiones de la imagen
                 rows, cols, _ = img.shape
+                # crear matriz para indicar como rotar
                 M = cv2.getRotationMatrix2D((cols / 2, rows / 2), rotation, 1)
+                #rotar la imagen
                 rotated_img = cv2.warpAffine(img, M, (cols, rows))
                 # Guardar imagen rotada
+                # Guardar en test
                 output_folder = os.path.join(script_dir, "dataset", "test", "grays", str(n))
                 os.makedirs(output_folder, exist_ok=True)  # Crear la carpeta si no existe
                 output_path = os.path.join(script_dir, "dataset", "test", "grays", str(n), str(n) + '_' + str(i+42+num-1) + '.jpg')
                 cv2.imwrite(output_path, rotated_img)
+                # Guardar en train
                 output_folder = os.path.join(script_dir, "dataset", "train", "grays", str(n))
                 os.makedirs(output_folder, exist_ok=True)  # Crear la carpeta si no existe
                 output_path = os.path.join(script_dir, "dataset", "train", "grays", str(n),
@@ -93,23 +93,18 @@ def resize_and_rotate():
                 num = num + 1
 
             nimg = nimg + 1
-            print("---------------###")
 def main():
     script_dir = os.path.dirname(os.path.abspath(__file__))
-
+    # Eliminar el contenido de la carpeta
     output_folder = os.path.join(script_dir, "dataset", "test", "grays")
-
-    # Eliminar el contenido de la carpeta
     shutil.rmtree(output_folder)
-
+    # Eliminar el contenido de la carpeta
     output_folder = os.path.join(script_dir, "dataset", "train", "grays")
-
-    # Eliminar el contenido de la carpeta
     shutil.rmtree(output_folder)
-
+    # Invocar métodos encargados de la transformación de las imágenes
     resize()
-    grises()
-    resize_and_rotate()
+    convertir_grises_imagenes()
+    rotar_imagenes()
 
 
 main()
