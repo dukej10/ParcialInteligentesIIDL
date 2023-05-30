@@ -146,7 +146,9 @@ def detectarFigura(imagenOriginal):
                                 else:
                                     # Guardar las imágenes de los cuadrados en archivos separados
                                     cv2.imwrite("imgs/dos/primer_carta.jpg", primer_cuadrado)
+                                    recorte("imgs/dos/primer_carta.jpg")
                                     cv2.imwrite("imgs/dos/segundo_carta.jpg", segundo_cuadrado)
+                                    recorte("imgs/dos/segundo_carta.jpg")
                                     # Para continuar detectando cuadrados se reinicia los párametros
                                     start_counting = False
                                     squares_vertices = []
@@ -170,6 +172,7 @@ def detectarFigura(imagenOriginal):
                                 min(x1, x2, x3, x4):max(x1, x2, x3, x4)]
                         # Guardar
                         cv2.imwrite("imgs/una/carta.jpg", carta)
+                        #recorte("imgs/una/carta.jpg")
                         # Reiniciar párametros para continuar detectando cartas
                         squares_vertices = []
                         start_counting = False
@@ -177,6 +180,35 @@ def detectarFigura(imagenOriginal):
                     continue
         i += 1
     return imagenOriginal
+
+
+def recorte(ruta):
+    # Cargar la imagen
+    img = cv2.imread(ruta)
+    # Convertir la imagen a escala de grises
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    # Aplicar un umbral para obtener una imagen binaria
+    _, threshold = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+
+    # Encontrar contornos en la imagen binaria
+    contours, _ = cv2.findContours(threshold, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    # Iterar sobre cada contorno y crear una imagen para cada uno
+    for i, contour in enumerate(contours):
+        # Crear una imagen en blanco del mismo tamaño que la imagen original
+        contour_image = np.zeros_like(img)
+
+        # Dibujar el contorno en la imagen en blanco
+        cv2.drawContours(contour_image, [contour], -1, (255, 255, 255), cv2.FILLED)
+
+        # Recortar la región dentro del contorno en la imagen original
+        x, y, w, h = cv2.boundingRect(contour)
+        cropped = img[y:y + h, x:x + w]
+
+        # Guardar la imagen recortada para el contorno actual
+        cv2.imwrite(ruta, cropped)
+
 
 video = cv2.VideoCapture(1)
 constructorVentana()
@@ -240,6 +272,9 @@ while True:
                 prediccion = True  # Ya se obtuvo la prediccion
                 print(f'se detectó {mensaje}')
                 capture_photo = False   # habilitar opción para tomar foto
+                if mostrar_video:  # Verificar si ya existe la ventana
+                    cv2.destroyWindow("Video")
+                    mostrar_video = False
     else:
         mode_text = "Debe seleccionar un modo"
     if k == ord('r') or k == ord('R'):  # Continuar tomando fotos
