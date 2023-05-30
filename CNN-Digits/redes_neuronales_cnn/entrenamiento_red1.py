@@ -1,3 +1,12 @@
+#ModelR1
+#En primer lugar, se cargan las imágenes de entrenamiento y prueba, las cuales son procesadas para convertirlas 
+#a escala de grises, redimensionarlas y normalizar sus valores. A continuación, se define la estructura del modelo de la CNN, 
+#que consiste en 2 capas de convolución con activacion relu, aplanamiento con activacion relu y capa de salida con activacion sigmoid. 
+#El modelo se compila especificando el optimizador, la función de pérdida y las métricas a utilizar, y luego se entrena 
+#utilizando las imágenes de entrenamiento. Una vez entrenado, se evalúa el modelo utilizando las imágenes de prueba y 
+#se calculan diversas métricas de evaluación, como precisión, recall y puntuación F1. Además, se genera una matriz de 
+#confusión y se guarda el modelo entrenado en un archivo para su uso posterior.
+
 import tensorflow as tf
 import keras
 import numpy as np
@@ -78,7 +87,24 @@ modelR1.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["acc
 early_stopping = EarlyStopping(monitor="val_loss", patience=5, restore_best_weights=True)
 
 # Entrenamiento con conjunto de validación
-history = modelR1.fit(x=imagenes, y=probabilidades, epochs=30, batch_size=60, callbacks=[early_stopping])
+#history = modelR1.fit(x=imagenes, y=probabilidades, epochs=30, batch_size=60, callbacks=[early_stopping])
+
+# Entrenamiento con validacion cruzada
+numero_fold = 1
+accuracy_fold = []
+loss_fold = []
+
+kFold = KFold(n_splits=5, shuffle=True)
+
+for train, test in kFold.split(imagenes, probabilidades):
+    print("##################Training fold ", numero_fold, "###################################")
+    history = modelR1.fit(imagenes[train], probabilidades[train], epochs=30, batch_size=60)
+    # Epochs --> Cantidad de veces que debe repetir el entrenamiento
+    # Batch --> Cantidad de datos que puede cargar en memoria para realizar el entrenamiento en una fase
+    metricas = modelR1.evaluate(imagenes[test], probabilidades[test])
+    accuracy_fold.append(metricas[1])
+    loss_fold.append(metricas[0])
+    numero_fold += 1
 
 #Prueba del modelo
 start_time = time.time()  # Obtener el tiempo de inicio
