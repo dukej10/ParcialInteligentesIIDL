@@ -107,37 +107,36 @@ def rotar_imagenes():
         num = 0
         for i in range(0, 42):
             if num > 0:
-                num = num -1
+                num = num - 1
             image_path = os.path.join(script_dir, "dataset", "test", "grays", str(n), str(n) + '_' + str(i) + '.jpg')
             print(image_path)
             # Cargar la imagen
             img = cv2.imread(image_path)
-            # Rotar imagen cada 72 grados
-            for rotation in range(72, 360, 72):
+            # Rotar imagen cada 60 grados
+            for rotation in range(60, 360, 60):
                 # Obtener dimensiones de la imagen
                 rows, cols, _ = img.shape
-                # crear matriz para indicar como rotar
+                # crear matriz para indicar cómo rotar
                 M = cv2.getRotationMatrix2D((cols / 2, rows / 2), rotation, 1)
-                #rotar la imagen
+                # rotar la imagen
                 rotated_img = cv2.warpAffine(img, M, (cols, rows))
                 # Guardar imagen rotada
                 # Guardar en test
                 output_folder = os.path.join(script_dir, "dataset", "test", "grays", str(n))
                 os.makedirs(output_folder, exist_ok=True)  # Crear la carpeta si no existe
-                output_path = os.path.join(script_dir, "dataset", "test", "grays", str(n), str(n) + '_' + str(i+42+num-1) + '.jpg')
+                output_path = os.path.join(script_dir, "dataset", "test", "grays", str(n), str(n) + '_' + str(i + 42 + num - 1) + '.jpg')
                 cv2.imwrite(output_path, rotated_img)
                 # Guardar en train
                 output_folder = os.path.join(script_dir, "dataset", "train", "grays", str(n))
                 os.makedirs(output_folder, exist_ok=True)  # Crear la carpeta si no existe
-                output_path = os.path.join(script_dir, "dataset", "train", "grays", str(n),
-                                           str(n) + '_' + str(i + 42 + num - 1) + '.jpg')
+                output_path = os.path.join(script_dir, "dataset", "train", "grays", str(n), str(n) + '_' + str(i + 42 + num - 1) + '.jpg')
                 cv2.imwrite(output_path, rotated_img)
                 print(output_path)
-                #print(output_path)
 
                 num = num + 1
 
             nimg = nimg + 1
+
 def main():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     # Eliminar el contenido de la carpeta
