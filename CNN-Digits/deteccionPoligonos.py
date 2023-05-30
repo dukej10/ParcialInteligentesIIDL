@@ -172,7 +172,7 @@ def detectarFigura(imagenOriginal):
                                 min(x1, x2, x3, x4):max(x1, x2, x3, x4)]
                         # Guardar
                         cv2.imwrite("imgs/una/carta.jpg", carta)
-                        #recorte("imgs/una/carta.jpg")
+                        recorte("imgs/una/carta.jpg")
                         # Reiniciar párametros para continuar detectando cartas
                         squares_vertices = []
                         start_counting = False
@@ -249,11 +249,17 @@ while True:
         break
     if show_opciones is False:
         if k == ord('c') or k == ord('C'): # Capturar la foto
-            procesar_text = 'Pulse P para procesar la foto'
+            procesar_text = 'Pulse P para procesar la foto    Pulse N para una nueva foto'
             restar_text = 'Pulse R para reiniciar'
             capture_photo = True
             start_counting = True
             prediccion = False
+        elif k == ord('n') or k == ord('N'): # Tomar una nueva foto
+            capture_photo = False  # habilitar opción para tomar foto
+            restar_text = ""
+            if mostrar_video:  # Verificar si ya existe la ventana
+                cv2.destroyWindow("Video")
+                mostrar_video = False
         elif k == ord('p') or k == ord('P'): # Procesar la imagen que se tomo para realizar la prediccion
             if prediccion is False: # Comprobar que no se haya predecido la carta actual
                 text_aux = "Ultima(s) carta(s):"
@@ -272,12 +278,13 @@ while True:
                 prediccion = True  # Ya se obtuvo la prediccion
                 print(f'se detectó {mensaje}')
                 capture_photo = False   # habilitar opción para tomar foto
+                restar_text = ""
                 if mostrar_video:  # Verificar si ya existe la ventana
                     cv2.destroyWindow("Video")
                     mostrar_video = False
     else:
         mode_text = "Debe seleccionar un modo"
-    if k == ord('r') or k == ord('R'):  # Continuar tomando fotos
+    if k == ord('r') or k == ord('R'):  # Reiniciar
         show_opciones = True
         restar_text = ""
         capture_photo = False
