@@ -1,4 +1,5 @@
 # ParcialInteligentesIIDL
+## Estudiantes: Juan Diego Duque López - Alejandro Trujillo
 ## Resultados de los modelos
 Se realizó la implementación y entrenamiento de 3 modelos de redes neuronales y los resultados de sus pruebas fueron los siguientes:
 | N° | Nombre modelo | Accuracy | Precision | Recall | F1 Score | Loss | Épocas de entrenamiento |
