@@ -10,4 +10,5 @@ Se realizó la implementación y entrenamiento de 3 modelos de redes neuronales 
 
 
 
-##Video:
+## Video:
+El link que se encontrará a continuación encontrará una explicación sobre el proyecto
