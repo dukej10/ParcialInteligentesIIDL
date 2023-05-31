@@ -60,8 +60,8 @@ def constructorVentana():
     cv2.namedWindow(nameWindow)
     cv2.createTrackbar("min", nameWindow, 0, 255, nothing)
     cv2.createTrackbar("max", nameWindow, 202, 255, nothing)
-    cv2.createTrackbar("kernel", nameWindow, 65, 100, nothing)
-    cv2.createTrackbar("areaMin", nameWindow, 4500, 10000, nothing)
+    cv2.createTrackbar("kernel", nameWindow, 45, 100, nothing)
+    cv2.createTrackbar("areaMin", nameWindow, 4000, 10000, nothing)
 
 def calcularAreas(figuras):
     areas = []
@@ -111,7 +111,7 @@ def detectarFigura(imagenOriginal):
                 cv2.drawContours(imagenOriginal, [figuraActual], 0, (0, 0, 255), 2)
                 if start_counting:
                     squares_vertices.append(vertices.tolist())
-                    if n_cartas == 2:  # Si el modo elegido es detección de dos cartas
+                    if n_cartas == 2:  # Si el modo elegido es detección de dos cartasz
                         num_squares += 1
                         if num_squares == 2:  # Si ya se detectaron dos cuadrados
                             # Obtener los vertices correspondientes de cada cuadro
