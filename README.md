@@ -1,4 +1,4 @@
-# ParcialInteligentesIIDL
+# Parcial Inteligentes II
 ## Estudiantes: Juan Diego Duque López - Alejandro Trujillo
 ## Resultados de los modelos
 Se realizó la implementación y entrenamiento de 3 modelos de redes neuronales y los resultados de sus pruebas fueron los siguientes:
@@ -12,4 +12,4 @@ Se realizó la implementación y entrenamiento de 3 modelos de redes neuronales 
 
 
 ## Video:
-El link que se encontrará a continuación encontrará una explicación sobre el proyecto
+A continuación encontrará el link del video con  unaa explicación sobre el proyecto
