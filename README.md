@@ -1,5 +1,11 @@
 # Parcial Inteligentes II
 
+# <<<<<<< HEAD
+
+Ver Rama final
+
+> > > > > > > 4111dbc2c775a56753dfe9b1f915028683299514
+
 ## Estudiantes: Juan Diego Duque López - Alejandro Trujillo
 
 ## Resultados de los modelos
