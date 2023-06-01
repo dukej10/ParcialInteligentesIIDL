@@ -54,8 +54,8 @@ numeroCanales=1  # Para trabajar con escala de grises debe ser 1
 formaImagen=(ancho,alto,numeroCanales)
 numeroCategorias=7  # son 10 por se clasificaran en 10 categorias según el numero
 
-cantidaDatosEntrenamiento=[209,209,209,209,209,209,209] # Cuantas imagenes hay para el entrenamiento por cada clase
-cantidaDatosPruebas=[209,209,209,209,209,209,209] # Cuantas imagenes hay para la prueba por cada clase
+cantidaDatosEntrenamiento=[251,251,251,251,251,251,251] # Cuantas imagenes hay para el entrenamiento por cada clase
+cantidaDatosPruebas=[251,251,251,251,251,251,251] # Cuantas imagenes hay para la prueba por cada clase
 
 #Cargar las imágenes
 imagenes, probabilidades=cargarDatos("../dataset/train/grays/",numeroCategorias,cantidaDatosEntrenamiento,ancho,alto)
