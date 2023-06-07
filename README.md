@@ -6,6 +6,8 @@ Ver Rama final
 
 Dataset: El Dataset empleado para el entrenamiento y prueba de los modelos de redes neuronales se encuentra en la carpeta dataset/train/grays y datasert/test/grays
 
+Imágenes a predecir: estás imágenes quedan en la carpeta img, cuando se van a predecir dos imágenes, las dos imágenes recortadas quedan en la carpeta dos, y cuando se va a predecir una carta, la imagen recortada queda en la carpeta una
+
 ## Resultados de los modelos
 
 Matrices de Confusión
