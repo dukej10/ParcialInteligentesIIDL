@@ -5,8 +5,11 @@ Ver Rama final
 ## Estudiantes: Juan Diego Duque López - Alejandro Trujillo
 
 ## Resultados de los modelos
+Matrices de Confusión
+![Matriz de confusión modeloR1](https://drive.google.com/file/d/1LZra-x50Yy6JyNREMDTg8oxfWYvrCOEY/view?usp=sharing)
 
-Se realizó la implementación y entrenamiento de 3 modelos de redes neuronales y los resultados de sus pruebas fueron los siguientes:
+
+Se realizó la implementación y entrenamiento de 3 modelos de redes neuronales los cuales se encuentran dentro de la carpeta redes_neuronales_cnn y los resultados de sus pruebas fueron los siguientes:
 | N° | Nombre modelo | Accuracy | Precision | Recall | F1 Score | Loss | Épocas de entrenamiento | Tiempo de respuesta |
 |----|---------------|---------------------|---------------------|---------------------|---------------------|---------------------|------------------------|----------------------|
 | 1 | ModelR1 | 0.9630051223676722 | 0.9702151782698896 | 0.9630051223676722 | 0.962409429392541 | 0.0021570068784058094| 30 | 1.555873155593872 |
