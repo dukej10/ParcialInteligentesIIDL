@@ -1,10 +1,29 @@
 # Parcial Inteligentes II
 
+Ver Rama final
+
 ## Estudiantes: Juan Diego Duque López - Alejandro Trujillo
+
+Dataset: El Dataset empleado para el entrenamiento y prueba de los modelos de redes neuronales se encuentra en la carpeta dataset/train/grays y datasert/test/grays
 
 ## Resultados de los modelos
 
-Se realizó la implementación y entrenamiento de 3 modelos de redes neuronales y los resultados de sus pruebas fueron los siguientes:
+Matrices de Confusión
+
+a. ModeloR1
+
+![Matriz de confusion modeloR1](https://drive.google.com/uc?export=view&id=1LZra-x50Yy6JyNREMDTg8oxfWYvrCOEY)
+
+b. ModeloR2
+
+![Matriz de confusion modeloR2](https://drive.google.com/uc?export=view&id=1EMV6KRJz5DnCmm-rC0NJgB0kMOkJmvrn)
+
+c. ModeloR3
+
+![Matriz de confusion modeloR3](https://drive.google.com/uc?export=view&id=1Hg-gv1Lfd-fhhKdoEf8sI9ZbzuBCk3M4)
+
+
+Se realizó la implementación y entrenamiento de 3 modelos de redes neuronales los cuales se encuentran dentro de la carpeta redes_neuronales_cnn y los resultados de sus pruebas fueron los siguientes:
 | N° | Nombre modelo | Accuracy | Precision | Recall | F1 Score | Loss | Épocas de entrenamiento | Tiempo de respuesta |
 |----|---------------|---------------------|---------------------|---------------------|---------------------|---------------------|------------------------|----------------------|
 | 1 | ModelR1 | 0.9630051223676722 | 0.9702151782698896 | 0.9630051223676722 | 0.962409429392541 | 0.0021570068784058094| 30 | 1.555873155593872 |
