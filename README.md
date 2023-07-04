@@ -1,6 +1,6 @@
 # Parcial Inteligentes II
-
 Ver Rama final
+Proyecto que permite a través de inteligencia artificial y redes neuronales convusionales detectar las cartas de bastones del 6 al 11 de la baraja española, permitiendo detectar dos cartas o 1 e ir sumando su valor correspondiente 
 
 ## Estudiantes: Juan Diego Duque López - Alejandro Trujillo
 
